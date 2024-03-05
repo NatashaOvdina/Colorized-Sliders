@@ -13,29 +13,34 @@ struct ContentView: View {
     @State private var blueSliderValue = Double.random(in: 0...255)
     
     var body: some View {
+        
         ZStack {
-            Color.mint
-                .opacity(0.3)
+            Color.gray
+                .opacity(0.4)
                 .ignoresSafeArea()
             VStack(spacing: 40) {
-                    RoundedRectangle(cornerRadius: 20)
-                    .frame(height: 200)
-                VStack(spacing: 1) {
-                    ColoredSliderValue(sliderValue: $redSliderValue, color: .red)
-                    ColoredSliderValue(sliderValue: $greenSliderValue, color: .green)
-                    ColoredSliderValue(sliderValue: $blueSliderValue, color: .blue)
+                ColorView(
+                    redSliderValue: $redSliderValue,
+                    greenSliderValue: $greenSliderValue,
+                    blueSliderValue: $blueSliderValue
+                )
+                VStack(spacing: 25) {
+                    SliderValueView(sliderValue: $redSliderValue, color: .red)
+                    SliderValueView(sliderValue: $greenSliderValue, color: .green)
+                    SliderValueView(sliderValue: $blueSliderValue, color: .blue)
                 }
             }
-            .padding(EdgeInsets(top: 20, leading: 16, bottom: 200, trailing: 16))
+            .padding(EdgeInsets(top: 20, leading: 16, bottom: 250, trailing: 16))
         }
     }
+    
 }
 
 #Preview {
     ContentView()
 }
 
-struct ColoredSliderValue: View {
+struct SliderValueView: View {
     @Binding var sliderValue: Double
     
     let color: Color
@@ -45,11 +50,29 @@ struct ColoredSliderValue: View {
             HStack(spacing: 20) {
                 Text(lround(sliderValue).formatted())
                     .font(.title3)
-                    .frame(width: 35, height: 20)
+                    .frame(width: 38, height: 20)
                 Slider(value: $sliderValue, in: 0...255, step: 1)
                     .tint(Color(color))
             }
         }
-        .padding()
+    }
+}
+
+struct ColorView: View {
+    @Binding var redSliderValue: Double
+    @Binding var greenSliderValue: Double
+    @Binding var blueSliderValue: Double
+    
+    var body: some View {
+        Color(
+            red: redSliderValue / 255,
+            green: greenSliderValue / 255,
+            blue: blueSliderValue / 255
+        )
+        .ignoresSafeArea()
+        .frame(height: 200)
+        .clipShape(RoundedRectangle(cornerRadius: 20))
+        .overlay(RoundedRectangle(cornerRadius: 20).stroke(Color.black, lineWidth: 4))
+        
     }
 }

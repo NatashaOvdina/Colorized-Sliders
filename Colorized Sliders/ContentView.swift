@@ -13,7 +13,6 @@ struct ContentView: View {
     @State private var blueSliderValue = Double.random(in: 0...255)
     
     var body: some View {
-        
         ZStack {
             Color.gray
                 .opacity(0.4)
@@ -30,12 +29,10 @@ struct ContentView: View {
                     SliderValueView(sliderValue: $blueSliderValue, color: .blue)
                 }
             }
-            .padding(EdgeInsets(top: 20, leading: 16, bottom: 250, trailing: 16))
+            .padding(EdgeInsets(top: 20, leading: 16, bottom: 300, trailing: 16))
         }
     }
-    
 }
-
 #Preview {
     ContentView()
 }
@@ -53,9 +50,16 @@ struct SliderValueView: View {
                     .frame(width: 38, height: 20)
                 Slider(value: $sliderValue, in: 0...255, step: 1)
                     .tint(Color(color))
+                TextField(value: $sliderValue, formatter: NumberFormatter(), label: {})
+                    .bordered()
+                    .font(.title3)
+                    .frame(width: 60, height: 20)
+                    .keyboardType(.decimalPad)
+                    
             }
         }
     }
+   
 }
 
 struct ColorView: View {
@@ -73,6 +77,26 @@ struct ColorView: View {
         .frame(height: 200)
         .clipShape(RoundedRectangle(cornerRadius: 20))
         .overlay(RoundedRectangle(cornerRadius: 20).stroke(Color.black, lineWidth: 4))
-        
     }
 }
+
+    struct BorderedViewModifier: ViewModifier {
+        func body(content: Content) -> some View {
+            content
+                .multilineTextAlignment(.trailing)
+                .padding(EdgeInsets(top: 5, leading: 5, bottom: 5, trailing: 5))
+                .overlay(RoundedRectangle(cornerRadius: 6)
+                    .stroke(lineWidth: 1)
+                    .foregroundStyle(.gray).opacity(0.8)
+                )
+                .background(.white)
+        }
+    }
+
+extension TextField {
+    func bordered() -> some View {
+        modifier(BorderedViewModifier())
+    }
+}
+
+

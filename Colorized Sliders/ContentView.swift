@@ -19,13 +19,14 @@ struct ContentView: View {
                 .ignoresSafeArea()
             VStack(spacing: 40) {
                     RoundedRectangle(cornerRadius: 20)
+                    .frame(height: 200)
                 VStack(spacing: 1) {
                     ColoredSliderValue(sliderValue: $redSliderValue, color: .red)
                     ColoredSliderValue(sliderValue: $greenSliderValue, color: .green)
-                    ColoredSliderValue(sliderValue: $blueSliderValue, color: . blue)
+                    ColoredSliderValue(sliderValue: $blueSliderValue, color: .blue)
                 }
             }
-            .padding(EdgeInsets(top: 20, leading: 16, bottom: 300, trailing: 16))
+            .padding(EdgeInsets(top: 20, leading: 16, bottom: 200, trailing: 16))
         }
     }
 }
@@ -41,10 +42,10 @@ struct ColoredSliderValue: View {
     
     var body: some View {
         VStack {
-            HStack(spacing: 30) {
+            HStack(spacing: 20) {
                 Text(lround(sliderValue).formatted())
                     .font(.title3)
-                    .frame(width: 40, height: 20)
+                    .frame(width: 35, height: 20)
                 Slider(value: $sliderValue, in: 0...255, step: 1)
                     .tint(Color(color))
             }

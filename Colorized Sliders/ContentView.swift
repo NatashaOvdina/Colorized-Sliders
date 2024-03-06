@@ -12,21 +12,43 @@ struct ContentView: View {
     @State private var greenSliderValue = Double.random(in: 0...255)
     @State private var blueSliderValue = Double.random(in: 0...255)
     
+    @FocusState private var isFocused: Bool
+    
     var body: some View {
         ZStack {
             Color.gray
                 .opacity(0.4)
                 .ignoresSafeArea()
+                .onTapGesture { isFocused = false }
             VStack(spacing: 40) {
                 ColorView(
                     redSliderValue: $redSliderValue,
                     greenSliderValue: $greenSliderValue,
                     blueSliderValue: $blueSliderValue
                 )
-                VStack(spacing: 25) {
-                    SliderValueView(sliderValue: $redSliderValue, color: .red)
-                    SliderValueView(sliderValue: $greenSliderValue, color: .green)
-                    SliderValueView(sliderValue: $blueSliderValue, color: .blue)
+                HStack {
+                    VStack(spacing: 25) {
+                        SliderValueView(sliderValue: $redSliderValue, color: .red)
+                        SliderValueView(sliderValue: $greenSliderValue, color: .green)
+                        SliderValueView(sliderValue: $blueSliderValue, color: .blue)
+                    }
+                    VStack(spacing: 25) {
+                        TextFieldsView(sliderValue: $redSliderValue)
+                        TextFieldsView(sliderValue: $greenSliderValue)
+                        TextFieldsView(sliderValue: $blueSliderValue)
+                    }
+                    .focused($isFocused)
+                    .keyboardType(.decimalPad)
+                    .toolbar {
+                        ToolbarItem(placement: .keyboard) {
+                            HStack {
+                                Spacer()
+                                Button("Done") {
+                                    isFocused = false
+                                }
+                            }
+                        }
+                    }
                 }
             }
             .padding(EdgeInsets(top: 20, leading: 16, bottom: 300, trailing: 16))
@@ -50,17 +72,11 @@ struct SliderValueView: View {
                     .frame(width: 38, height: 20)
                 Slider(value: $sliderValue, in: 0...255, step: 1)
                     .tint(Color(color))
-                TextField(value: $sliderValue, formatter: NumberFormatter(), label: {})
-                    .bordered()
-                    .font(.title3)
-                    .frame(width: 60, height: 20)
-                    .keyboardType(.decimalPad)
-                    
             }
         }
     }
-   
 }
+
 
 struct ColorView: View {
     @Binding var redSliderValue: Double
@@ -80,6 +96,18 @@ struct ColorView: View {
     }
 }
 
+struct TextFieldsView: View {
+    @Binding var sliderValue: Double
+    
+    var body: some View {
+        TextField(value: $sliderValue, formatter: NumberFormatter(), label: {})
+            .bordered()
+            .font(.title3)
+            .frame(width: 60, height: 20)
+        
+    }
+}
+
     struct BorderedViewModifier: ViewModifier {
         func body(content: Content) -> some View {
             content
@@ -89,7 +117,7 @@ struct ColorView: View {
                     .stroke(lineWidth: 1)
                     .foregroundStyle(.gray).opacity(0.8)
                 )
-                .background(.white)
+                .background(.white).clipShape(RoundedRectangle(cornerRadius: 6))
         }
     }
 
@@ -98,5 +126,6 @@ extension TextField {
         modifier(BorderedViewModifier())
     }
 }
+
 
 
